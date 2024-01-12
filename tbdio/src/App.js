@@ -1,25 +1,38 @@
-import logo from './logo.svg';
 import './App.css';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 
-function App() {
+const App = () => {
+  const [count, setCount] = useState(0);
+
+  useEffect(() => {
+    const fetchCount = async () => {
+      try {
+        const response = await axios.get('/api/count');
+        setCount(response.data.count);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchCount();
+  }, []);
+
+  const handleIncrement = async () => {
+    try {
+      const response = await axios.post('/api/increment');
+      setCount(response.data.count);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <h1>Counter: {count}</h1>
+      <button onClick={handleIncrement}>Increment</button>
     </div>
   );
-}
+};
 
 export default App;
